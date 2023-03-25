@@ -127,13 +127,15 @@ void comprar_passagem(tipo_passagem *r, int c)
 		return;
 			
 	}
-		
+	
+		// Coleta de CPf
 	cout << "Digite seu CPF\n -> ";
 	cin >> p.cpf;
 		
 		back1:
 		system("cls");
-			
+		
+		// todas as cidades que posso registrar
 	cout << "\nCidades que a planet express cobre:\n\nCodigo\t\tCidade" << endl;
 		
 	linha();
@@ -145,12 +147,14 @@ void comprar_passagem(tipo_passagem *r, int c)
 	}
 		
 	linha();
-		
+	
+		// coleta do codigo da cidade de ORIGEM
 	int origem , destino;
 		
 	cout << "Codigo da origem -> ";
 	cin >> origem;
-		
+	
+		// Verificação de existencia de cidade
 	if ( origem < 0 or origem > 7)
 	{
 			
@@ -160,10 +164,12 @@ void comprar_passagem(tipo_passagem *r, int c)
 			goto back1;
 			
 	}
-		
+	
+		// coleta do codigo da cidade de ORIGEM
 	cout << "Codigo do destino -> ";
 	cin >> destino;
-		
+	
+		// Verificação de existencia de cidade		
 	if ( origem < 0 or origem > 7)
 	{
 			
@@ -175,10 +181,12 @@ void comprar_passagem(tipo_passagem *r, int c)
 	}
 		
 	cout << endl;
-		
+	
+		// tranferencia das variaveis para a struct p
 	p.origem = cidades.cidades[origem];
 	p.destino = cidades.cidades[destino];
 		
+		// Verificação de cidades iguais
 	if ( origem == destino )
 	{
 		
@@ -195,6 +203,7 @@ void comprar_passagem(tipo_passagem *r, int c)
 	
 		system("cls");
 		
+		// Pedido de Ida e Vouta
 	cout << "Deseja agendar a volta [Sim/Nao]?\n -> ";
 	fflush(stdin);
 	gets(p.ida_volta);
@@ -202,6 +211,7 @@ void comprar_passagem(tipo_passagem *r, int c)
 		
 	system("cls");
 		
+		// Coleta das variaveis caso seja necessario
 	cout << "Digite o DIA de Ida [ Ex: 01, 02, 03 ...]:\n -> ";
 	cin >> p.ida_dia;
 	cout << "Digite o MES de Ida [ Ex: 01 - janeiro, 02 - fevereiro ... ]:\n -> " << p.ida_dia << "/";
@@ -211,10 +221,12 @@ void comprar_passagem(tipo_passagem *r, int c)
 			
 	linha();
 		
+		// Seleção de dia
 	cout << "Selecione um dos horarios disponiveis para IDA:\n\nCodigo\t\tHorarios\n";
 		
 	linha();
 		
+		// Impreção de horarios deisponiveis
 	for(int a = 0; a < 4; a++)
 	{
 			
@@ -224,13 +236,16 @@ void comprar_passagem(tipo_passagem *r, int c)
 		
 	linha();
 		
+		// coleta de hora
 	cout << "Codigo -> ";
 	cin >> p.hora_ida;
 		
+		// Inspeção de existencia de hora
 	if ( p.hora_ida < 0 or p.hora_ida > 3)
 	{
 			
 			system("cls");
+			
 		cout << "Codigo invalido, insira apenas os codigos da tabela" << endl;
 			
 			Sleep(3);
