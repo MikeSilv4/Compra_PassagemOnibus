@@ -1,6 +1,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <string>
+#include <iomanip>
 	using namespace std;
 
 // Definindo struct de cadastro de passagem
@@ -44,6 +45,7 @@ typedef struct{
 void Msn();
 void comprar_passagem(tipo_passagem *, int);
 void verificar(tipo_passagem *, int);
+void onibus(tipo_passagem *, int, int, int, int, int, int);
 void linha();
 	
 int main()
@@ -250,6 +252,7 @@ void comprar_passagem(tipo_passagem *r, int c)
 				
 	}
 		
+		// Verificação caso seja necessario ida e volta
 	if ( p.ida_volta[0] == 'S' or p.ida_volta[0] == 's')
 	{
 			
@@ -297,16 +300,24 @@ void comprar_passagem(tipo_passagem *r, int c)
 		
 		system("cls");
 			
-	int cont  = 1;
+	//int cont  = 1;
 			
-	for ( int a = 0; a < c; a++ )
+	/*	for ( int a = 0; a < c; a++ )
 	{
 			
-		if ( (p.origem == r[a].origem and p.destino == r[a].destino) and (p.hora_ida == r[a].hora_ida)) cont++;
+		if ((p.origem == r[a].origem and p.destino == r[a].destino) and (p.hora_ida)) cont++;
 			
-	}
-		
-	p.banco = cont;
+	}*/
+	
+	//int esolha;
+	cout << "Escolha o numero da poltrona que deseja:"<< endl;
+	onibus(r, c, p.origem, p.destino, p.hora_ida, p.ida_dia, p.ida_mes);
+	cout << "Descrição: \n I = Saida\n O = Pltronas reservadas \n X = Poltronas disponiveis\n XX = banco do condutor" << endl << endl;
+	Sleep(20000);
+	cout << "Selecione apenas poltronas disponiveis: \n -> ";
+	cin >> p.banco;
+	
+	//p.banco = cont;
 	
 	if ( p.origem > p.destino ) p.valor = cidades.kms[p.destino][p.origem] * 0.60 + 20;
 	else p.valor = cidades.kms[p.origem][p.destino] * 0.60 + 20;
@@ -321,7 +332,7 @@ void comprar_passagem(tipo_passagem *r, int c)
 	r[c] = p;
 	
 	cout << endl;
-	cout << " --> Cadastro realizado com sucesso. Verifique a passagem na guia verificar do menu inicial." << endl;
+	cout << " \n\n--> Cadastro realizado com sucesso. Verifique a passagem na guia verificar do menu inicial." << endl;
 	
 		Sleep(7000);
 		system("cls");
@@ -446,7 +457,7 @@ void verificar(tipo_passagem *r, int c)
 			
 		}
 		
-		cout << "|" << endl;;
+		cout << "|" << endl;
 	
 		
 	}
@@ -465,6 +476,7 @@ void verificar(tipo_passagem *r, int c)
 	Sleep(1000);
 	cout << "Destino: " << cidades.cidades[r[pos].destino] << ";" << endl;
 	Sleep(1000);
+	cout << fixed << setprecision(2);
 	cout << "Valor da passagem: R$" << r[pos].valor << endl << endl;
 	Sleep(1000);
 	cout << "** O valor da passagem deve ser pago somente ao embarcar no transporte.\n Desde ja agradecemos a preferencia :)\nDeseja voltar ao inicio[Sim/Nao]?" << endl;
@@ -485,4 +497,180 @@ void verificar(tipo_passagem *r, int c)
 		goto back3;
 	
 }
+
+void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia, int mes)
+{
+	
+	
+	int contador = 0;
+	
+	for(int i = 0; i< c; i++)
+	{
+		
+		if(r[i].origem == origem and r[i].destino == destino)
+		{
+			if(r[i].hora_ida == hora and r[i].ida_dia == dia)
+			{
+				 if(r[i].ida_mes == mes)
+				 	contador++;
+				 	
+			}
+		}
+		
+	}
+
+	int numeroBanco[contador], tamanho = contador;
+	
+	contador = 0;
+	
+	cout << "    --------------" << endl;
+	cout << "     XX          I " << endl;
+	cout << "    ------  ------" << endl;
+	
+	for(int i = 0; i< c; i++)
+	{	
+
+		if(r[i].origem == origem and r[i].destino == destino)
+		{
+			if(r[i].hora_ida == hora and r[i].ida_dia == dia)
+			{
+				 if(r[i].ida_mes == mes)
+				 {
+				 	
+				 	numeroBanco[contador] == r[i].banco;
+					contador++;
+					
+				 }
+			}
+		}
+		
+	}
+	
+	int poltrona = 0;
+	
+	for (int a = 0; a < 11; a++)
+	{
+		
+		int cache = 0;
+		
+		if(poltrona + 1 < 10)
+			cout <<  poltrona+1 << "   | ";
+		else
+			cout <<  poltrona+1 << "  | ";
+			
+		poltrona++;
+		for(int b = 0; b < contador; b++)
+		{
+			
+			if(numeroBanco[b] == poltrona)
+			{
+				
+				cache = 1;
+				break;
+				
+			}
+			
+		}
+		if(cache == 1)
+		{
+			
+			cout << "O ";
+			cache = 0;
+			
+		}else
+		{
+			
+			cout << "X ";	
+			
+		}
+		
+		
+		
+		poltrona++;
+		for(int b = 0; b < contador; b++)
+		{
+			
+			if(numeroBanco[b] == poltrona)
+			{
+				
+				cache = 1;
+				break;
+				
+			}
+			
+		}
+		if(cache == 1)
+		{
+			
+			cout << "O    ";
+			cache = 0;
+			
+		}else
+		{
+			
+			cout << "X    ";	
+			
+		}
+		
+		
+		
+		poltrona++;
+		for(int b = 0; b < contador; b++)
+		{
+			
+			if(numeroBanco[b] == poltrona)
+			{
+				
+				cache = 1;
+				break;
+				
+			}
+			
+		}
+		if(cache == 1)
+		{
+			
+			cout << "O ";
+			cache = 0;
+			
+		}else
+		{
+			
+			cout << "X ";	
+			
+		}
+		
+		
+		
+		
+		poltrona++;
+		for(int b = 0; b < contador; b++)
+		{
+			
+			if(numeroBanco[b] == poltrona)
+			{
+				
+				cache = 1;
+				break;
+				
+			}
+			
+		}
+		if(cache == 1)
+		{
+			
+			cout << "O ";
+			cache = 0;
+			
+		}else
+		{
+			
+			cout << "X ";	
+			
+		}
+		
+		cout << "|  " << poltrona << endl;
+	}
+	cout << "    --------------" << endl;
+ } 
 
