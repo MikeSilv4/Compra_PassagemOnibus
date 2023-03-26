@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <string>
 #include <iomanip>
+#include <locale.h>
 	using namespace std;
 
 // Definindo struct de cadastro de passagem
@@ -11,7 +12,9 @@ typedef struct
 	char nome[60], ida_volta[4];
 	int origem, destino;
 	long long int cpf;
-	int idade, ida_dia, ida_mes, volta_dia, volta_mes, hora_ida, hora_volta, banco;
+	int idade;
+	int ida_dia, ida_mes, volta_dia, volta_mes;
+	int hora_ida, hora_volta, banco;
 	float valor;
 	
 }tipo_passagem;
@@ -50,6 +53,8 @@ void linha();
 	
 int main()
 {
+		setlocale(LC_ALL, "");
+	
 	//Contador indentifica o numero de alocoções realizadas dentro do registrador de passagem
 	int contador = 0;
 	
@@ -58,7 +63,7 @@ int main()
 		Msn();
 	
 	// Registra as passagems confirmadas
-	tipo_passagem registrador[50];
+	tipo_passagem registrador[200];
 	
 	// identfica a escolha do usuario
 	int escolha;
@@ -191,11 +196,10 @@ void comprar_passagem(tipo_passagem *r, int c)
 		linha();
 			
 		cout << "Invalido. Origem -> " << cidades.cidades[p.origem] << ", Destino -> " <<cidades.cidades[p.origem] << endl;
-			
-		linha();
 		
-		Sleep(3000);
-		goto back1;
+			linha();
+			Sleep(3000);
+			goto back1;
 			
 	}
 	
@@ -206,8 +210,9 @@ void comprar_passagem(tipo_passagem *r, int c)
 	fflush(stdin);
 	gets(p.ida_volta);
 	fflush(stdin);
-		
-	system("cls");
+	
+		back4:
+		system("cls");
 		
 		// Coleta das variaveis caso seja necessario
 	cout << "Digite o DIA de Ida [ Ex: 1, 2, 3 ...]:\n -> ";
@@ -216,8 +221,7 @@ void comprar_passagem(tipo_passagem *r, int c)
 	cin >> p.ida_mes;
 		
 		back2:
-			
-	linha();
+		linha();
 		
 		// Seleção de dia
 	cout << "Selecione um dos horarios disponiveis para IDA:\n\nCodigo\t\tHorarios\n";
@@ -232,7 +236,7 @@ void comprar_passagem(tipo_passagem *r, int c)
 			
 	}
 		
-	linha();
+		linha();
 		
 		// coleta de hora
 	cout << "Codigo -> ";
@@ -263,13 +267,21 @@ void comprar_passagem(tipo_passagem *r, int c)
 		cout << "Digite o MES de Volta [ Ex: 1 - janeiro, 2 - fevereiro ... ]:\n -> " << p.volta_dia << "/";
 		cin >> p.volta_mes;
 			
-			back3:
+		if(p.volta_mes < p.ida_mes)
+		{
 			
-		linha();
+				system("cls");
+			cout << "\n\nOperação invalida. A planet express trabalha apenas com o calendario anual.\nImpossivel realizar agendamento de viagens de um outro ano." << endl;
+				goto back4;
+				
+		}
+			
+			back3:		
+			linha();
 			
 		cout << "Selecione um dos horarios disponiveis para VOLTA:\n\nCodigo\t\tHorarios\n";
 			
-		linha();
+			linha();
 			
 		for(int a = 0; a < 4; a++)
 		{
@@ -278,7 +290,7 @@ void comprar_passagem(tipo_passagem *r, int c)
 				
 		}
 			
-		linha();
+			linha();
 			
 		cout << "Codigo -> ";
 		cin >> p.hora_volta;
@@ -300,24 +312,12 @@ void comprar_passagem(tipo_passagem *r, int c)
 		
 		system("cls");
 			
-	//int cont  = 1;
-			
-	/*	for ( int a = 0; a < c; a++ )
-	{
-			
-		if ((p.origem == r[a].origem and p.destino == r[a].destino) and (p.hora_ida)) cont++;
-			
-	}*/
-	
-	//int esolha;
 	cout << "Escolha o numero da poltrona que deseja:"<< endl;
 	onibus(r, c, p.origem, p.destino, p.hora_ida, p.ida_dia, p.ida_mes);
 	cout << "Descrição: \n I = Saida\n O = Pltronas reservadas \n X = Poltronas disponiveis\n XX = banco do condutor" << endl << endl;
-	Sleep(20000);
+
 	cout << "Selecione apenas poltronas disponiveis: \n -> ";
 	cin >> p.banco;
-	
-	//p.banco = cont;
 	
 	if ( p.origem > p.destino ) p.valor = cidades.kms[p.destino][p.origem] * 0.60 + 20;
 	else p.valor = cidades.kms[p.origem][p.destino] * 0.60 + 20;
@@ -386,11 +386,12 @@ void verificar(tipo_passagem *r, int c)
 
 		
 	cout << endl << endl << " ---------- Informacões de viagem ---------- " << endl << endl;
-	Sleep(1000);
+		Sleep(1000);
 	cout << "Seja bem vindo " << r[pos].nome << endl;
-	Sleep(1000);
+		Sleep(1000);
 	cout << "Sua poutrona:  " << r[pos].banco << endl;
-	Sleep(1000);
+		Sleep(1000);
+		
 	cout << "--------------" << endl;
 	cout << " XX          I " << endl;
 	cout << "------  ------" << endl;
@@ -459,29 +460,34 @@ void verificar(tipo_passagem *r, int c)
 		
 		cout << "|" << endl;
 	
-		
 	}
 	cout << "--------------" << endl;
 	cout << "Descrição: \n I = Saida\n O = Banco reservado\n X = outros bancos\n XX = banco do condutor" << endl << endl;
-	Sleep(1000);
-	Sleep(1000);
-	cout << "Data da Ida: " << r[pos].ida_dia << "/" << r[pos].ida_mes << " - " << r[pos].hora_ida << ":00;" << endl;
+		Sleep(1000);
+		Sleep(1000);
+	
+	tipo_cidades cidades;
+	
+	cout << "Data da Ida: " << r[pos].ida_dia << "/" << r[pos].ida_mes << " - " << cidades.horas[r[pos].hora_ida] << ":00;" << endl;
 	
 	if(r[pos].ida_volta[0] == 'S')
-		cout << "Data da Volta: " << r[pos].volta_dia << "/" << r[pos].volta_mes << " - " << r[pos].hora_volta << ":00;" << endl;
+		cout << "Data da Volta: " << r[pos].volta_dia << "/" << r[pos].volta_mes << " - " << cidades.horas[r[pos].hora_volta] << ":00;" << endl;
 		
 	Sleep(1000);
-	tipo_cidades cidades;
+	
 	cout << "Origem: " << cidades.cidades[r[pos].origem] << ";" << endl;
-	Sleep(1000);
+		Sleep(1000);
 	cout << "Destino: " << cidades.cidades[r[pos].destino] << ";" << endl;
-	Sleep(1000);
+		Sleep(1000);
 	cout << fixed << setprecision(2);
 	cout << "Valor da passagem: R$" << r[pos].valor << endl << endl;
-	Sleep(1000);
-	cout << "** O valor da passagem deve ser pago somente ao embarcar no transporte.\n Desde ja agradecemos a preferencia :)\nDeseja voltar ao inicio[Sim/Nao]?" << endl;
+		Sleep(1000);
+	cout << "** O valor da passagem deve ser pago somente ao embarcar no transporte.\n Desde ja agradecemos a preferencia :)\n\nDeseja voltar ao inicio[Sim/Nao]?\n -> " << endl;
+	
 	char escolha[4];
+	
 		back3:
+			
 	fflush(stdin);
 	gets(escolha);
 	fflush(stdin);
@@ -491,6 +497,7 @@ void verificar(tipo_passagem *r, int c)
 		
 		system("cls");
 		return;
+		
 	}
 	
 	else
@@ -503,7 +510,7 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 	
 	
 	int contador = 0;
-	
+	 // Define a quantidade de lugares ocupados na mesma viagem
 	for(int i = 0; i< c; i++)
 	{
 		
@@ -518,15 +525,10 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 		}
 		
 	}
-
+	
 	int numeroBanco[contador], tamanho = contador;
-	
 	contador = 0;
-	
-	cout << "    --------------" << endl;
-	cout << "     XX          I " << endl;
-	cout << "    ------  ------" << endl;
-	
+		
 	for(int i = 0; i< c; i++)
 	{	
 
@@ -537,7 +539,8 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 				 if(r[i].ida_mes == mes)
 				 {
 				 	
-				 	numeroBanco[contador] == r[i].banco;
+				 	numeroBanco[contador] = r[i].banco;
+				 	cout << numeroBanco[i] << endl;
 					contador++;
 					
 				 }
@@ -545,6 +548,10 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 		}
 		
 	}
+	
+	cout << "    --------------" << endl;
+	cout << "     XX          I " << endl;
+	cout << "    ------  ------" << endl;
 	
 	int poltrona = 0;
 	
@@ -559,9 +566,10 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 			cout <<  poltrona+1 << "  | ";
 			
 		poltrona++;
-		for(int b = 0; b < contador; b++)
+		
+		for(int b = 0; b < tamanho; b++)
 		{
-			
+	
 			if(numeroBanco[b] == poltrona)
 			{
 				
@@ -587,7 +595,7 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 		
 		
 		poltrona++;
-		for(int b = 0; b < contador; b++)
+		for(int b = 0; b < tamanho; b++)
 		{
 			
 			if(numeroBanco[b] == poltrona)
@@ -615,7 +623,7 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 		
 		
 		poltrona++;
-		for(int b = 0; b < contador; b++)
+		for(int b = 0; b < tamanho; b++)
 		{
 			
 			if(numeroBanco[b] == poltrona)
@@ -644,7 +652,7 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 		
 		
 		poltrona++;
-		for(int b = 0; b < contador; b++)
+		for(int b = 0; b < tamanho; b++)
 		{
 			
 			if(numeroBanco[b] == poltrona)
@@ -673,4 +681,3 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 	}
 	cout << "    --------------" << endl;
  } 
-
