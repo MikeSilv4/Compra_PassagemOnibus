@@ -315,9 +315,16 @@ void comprar_passagem(tipo_passagem *r, int c)
 	cout << "Escolha o numero da poltrona que deseja:"<< endl;
 	onibus(r, c, p.origem, p.destino, p.hora_ida, p.ida_dia, p.ida_mes);
 	cout << "Descrição: \n I = Saida\n O = Pltronas reservadas \n X = Poltronas disponiveis\n XX = banco do condutor" << endl << endl;
-
+	
+	back5:
+		
 	cout << "Selecione apenas poltronas disponiveis: \n -> ";
 	cin >> p.banco;
+	
+	if(p.banco < 1 or p.banco > 44)
+	{
+		goto back5;
+	}
 	
 	if ( p.origem > p.destino ) p.valor = cidades.kms[p.destino][p.origem] * 0.60 + 20;
 	else p.valor = cidades.kms[p.origem][p.destino] * 0.60 + 20;
@@ -482,7 +489,7 @@ void verificar(tipo_passagem *r, int c)
 	cout << fixed << setprecision(2);
 	cout << "Valor da passagem: R$" << r[pos].valor << endl << endl;
 		Sleep(1000);
-	cout << "** O valor da passagem deve ser pago somente ao embarcar no transporte.\n Desde ja agradecemos a preferencia :)\n\nDeseja voltar ao inicio[Sim/Nao]?\n -> " << endl;
+	cout << "** O valor da passagem deve ser pago somente ao embarcar no transporte.\n Desde ja agradecemos a preferencia :)\n\nDeseja voltar ao inicio[Sim]?\n -> ";
 	
 	char escolha[4];
 	
@@ -498,9 +505,7 @@ void verificar(tipo_passagem *r, int c)
 		system("cls");
 		return;
 		
-	}
-	
-	else
+	}else
 		goto back3;
 	
 }
@@ -592,9 +597,8 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 			
 		}
 		
-		
-		
 		poltrona++;
+		
 		for(int b = 0; b < tamanho; b++)
 		{
 			
@@ -620,9 +624,8 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 			
 		}
 		
-		
-		
 		poltrona++;
+		
 		for(int b = 0; b < tamanho; b++)
 		{
 			
@@ -648,10 +651,8 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 			
 		}
 		
-		
-		
-		
 		poltrona++;
+		
 		for(int b = 0; b < tamanho; b++)
 		{
 			
