@@ -48,7 +48,7 @@ typedef struct{
 void Msn();
 void comprar_passagem(tipo_passagem *, int);
 void verificar(tipo_passagem *, int);
-void onibus(tipo_passagem *, int, int, int, int, int, int);
+int onibus(tipo_passagem *, int, int, int, int, int, int);
 void linha();
 	
 int main()
@@ -136,9 +136,23 @@ void comprar_passagem(tipo_passagem *r, int c)
 			
 	}
 	
+		back6:
 		// Coleta de CPf
 	cout << "Digite seu CPF\n -> ";
 	cin >> p.cpf;
+	
+	for(int a = 0; a < c; a++)
+	{
+		
+		if(p.cpf == r[a].cpf)
+		{
+			
+			cout << "CPF ja registrado. Caso seje um erro informe a administração do sistema." << endl;
+			goto back6;
+			
+		}
+		
+	}
 		
 		back1:
 		system("cls");
@@ -313,13 +327,45 @@ void comprar_passagem(tipo_passagem *r, int c)
 		system("cls");
 			
 	cout << "Escolha o numero da poltrona que deseja:"<< endl;
-	onibus(r, c, p.origem, p.destino, p.hora_ida, p.ida_dia, p.ida_mes);
+	int tamanho = onibus(r, c, p.origem, p.destino, p.hora_ida, p.ida_dia, p.ida_mes);
 	cout << "Descrição: \n I = Saida\n O = Pltronas reservadas \n X = Poltronas disponiveis\n XX = banco do condutor" << endl << endl;
 	
 	back5:
 		
 	cout << "Selecione apenas poltronas disponiveis: \n -> ";
+	int	count = 0, bancosOcupados[tamanho];
+		
+	for(int i = 0; i< c; i++)
+	{	
+
+		if(r[i].origem == p.origem and r[i].destino == p.destino)
+		{
+			if(r[i].hora_ida == p.hora_ida and r[i].ida_dia == p.ida_dia)
+			{
+				 if(r[i].ida_mes == p.ida_mes)
+				 {
+				 	
+				 	bancosOcupados[count] = r[i].banco;
+					count++;
+					
+				 }
+			}
+		}
+		
+	}
 	cin >> p.banco;
+	
+	for(int f = 0; f < tamanho; f++)
+	{
+		
+		if(p.banco == bancosOcupados[f])
+		{
+			
+			goto back5;
+			
+		}
+		
+	}
 	
 	if(p.banco < 1 or p.banco > 44)
 	{
@@ -510,7 +556,7 @@ void verificar(tipo_passagem *r, int c)
 	
 }
 
-void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia, int mes)
+int onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia, int mes)
 {
 	
 	
@@ -545,7 +591,6 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 				 {
 				 	
 				 	numeroBanco[contador] = r[i].banco;
-				 	cout << numeroBanco[i] << endl;
 					contador++;
 					
 				 }
@@ -681,4 +726,7 @@ void onibus(tipo_passagem *r, int c, int origem, int destino, int hora, int dia,
 		cout << "|  " << poltrona << endl;
 	}
 	cout << "    --------------" << endl;
+	
+	return tamanho;
+	
  } 
